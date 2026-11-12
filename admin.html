@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>پنل مدیریت | GameLand</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070816">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="adm" id="app">
+
+ <section id="nocfg" class="glass tb" hidden>
+  <h2>🔒 پنل مدیریت هنوز فعال نیست</h2>
+  <p style="color:var(--mut);margin-top:6px">سایت الان در <b>حالت ساده</b> کار می‌کند: بازی‌ها از فایل <b>games.json</b> خوانده می‌شوند و همه‌ی بازدیدکننده‌ها می‌توانند دانلود کنند. برای فعال شدن پنل مدیریت (آپلود بازی از داخل سایت، شمارنده‌ی دانلود و ورود با رمز)، <b>مرحله‌ی دوم</b> در README.md را انجام بده و مقدارهای <b>config.js</b> را پر کن.</p>
+ </section>
+
+ <section id="login" class="lg glass" hidden>
+  <h1>🔐 ورود مدیر</h1>
+  <p style="color:var(--mut);font-size:14px">فقط مدیر سایت اجازه‌ی ورود و آپلود دارد.</p>
+  <form id="lf" autocomplete="on">
+   <label class="fld"><span>ایمیل</span><input id="em" type="email" required autocomplete="username" dir="ltr"></label>
+   <label class="fld"><span>رمز عبور</span><input id="pw" type="password" required autocomplete="current-password" dir="ltr"></label>
+   <p id="le" style="color:#ff8fab;font-size:14px;min-height:22px"></p>
+   <button class="btn" style="width:100%" id="lb">ورود</button>
+  </form>
+ </section>
+
+ <section id="dash" hidden>
+  <div class="bar"><h1>🎛 پنل مدیریت گیم‌لند</h1><button class="btn ghost sm" id="out">خروج</button></div>
+  <div class="stats" style="justify-content:flex-start"><div class="stat glass"><b id="n1">۰</b><small>بازی</small></div><div class="stat glass"><b id="n2">۰</b><small>دانلود کل</small></div><div class="stat glass"><b id="n3">۰</b><small>منتشرشده</small></div></div>
+  <div class="tabs"><button class="chip on" data-v="list">🕹 بازی‌ها</button><button class="chip" data-v="form" id="tabf">➕ بازی جدید</button><button class="chip" data-v="tools">🛠 ابزارها (سایت‌مپ گوگل)</button></div>
+
+  <div id="v-list"></div>
+
+  <div id="v-form" hidden class="glass tb">
+   <h2 id="ft">➕ افزودن بازی جدید</h2>
+   <div class="two">
+    <label class="fld"><span>نام بازی *</span><input id="f-title" maxlength="80"></label>
+    <label class="fld"><span>اسلاگ (آدرس انگلیسی) — مثال: night-race</span><input id="f-slug" dir="ltr" maxlength="60" placeholder="خودکار از نام ساخته می‌شود"></label>
+   </div>
+   <div class="two">
+    <label class="fld"><span>دسته‌بندی</span><select id="f-cat"><option value="car">🏎 ماشینی</option><option value="shooter">🔫 تفنگی</option><option value="puzzle">🧩 فکری</option><option value="arcade" selected>👾 آرکید</option><option value="other">🎮 سایر</option></select></label>
+    <label class="fld"><span>لینک بازی آنلاین (اختیاری)</span><input id="f-play" dir="ltr" placeholder="https://..."></label>
+   </div>
+   <label class="fld"><span>توضیح کوتاه (روی کارت نمایش داده می‌شود)</span><input id="f-short" maxlength="140"></label>
+   <label class="fld"><span>توضیحات کامل (صفحه‌ی اختصاصی بازی)</span><textarea id="f-desc"></textarea></label>
+   <div class="two">
+    <label class="fld"><span>🖼 عکس کاور (JPG/PNG/WEBP تا ۵ مگابایت)</span><input id="f-cover" type="file" accept="image/png,image/jpeg,image/webp"><div class="cur" id="c-cover"></div></label>
+    <label class="fld"><span>📸 تصاویر بازی (چند عکس)</span><input id="f-shots" type="file" accept="image/png,image/jpeg,image/webp" multiple><div class="xs" id="c-shots"></div></label>
+   </div>
+   <div class="two">
+    <label class="fld"><span>🤖 فایل APK اندروید</span><input id="f-apk" type="file" accept=".apk"><div class="cur" id="c-apk"></div></label>
+    <label class="fld"><span>🗜 فایل ZIP</span><input id="f-zip" type="file" accept=".zip"><div class="cur" id="c-zip"></div></label>
+   </div>
+   <div class="two">
+    <label class="fld"><span>🌐 فایل HTML</span><input id="f-html" type="file" accept=".html,.htm"><div class="cur" id="c-html"></div></label>
+    <label class="fld"><span>تعداد دانلود (قابل ویرایش)</span><input id="f-dl" type="number" min="0" value="0" dir="ltr"></label>
+   </div>
+   <p class="hint">حداکثر حجم هر فایل بازی ۵۰ مگابایت است (سقف نسخه‌ی رایگان Supabase).</p>
+   <div style="display:flex;gap:18px;flex-wrap:wrap;margin:10px 0"><label><input type="checkbox" id="f-pub" checked> منتشر شود</label><label><input type="checkbox" id="f-feat"> ⭐ بازی ویژه</label></div>
+   <div id="ups"></div>
+   <p id="fe" style="color:#ff8fab;font-size:14px;min-height:22px"></p>
+   <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="sv">💾 ذخیره و انتشار</button><button class="btn ghost" id="cn">انصراف</button></div>
+  </div>
+
+  <div id="v-tools" hidden class="glass tb">
+   <h2>🗺 سایت‌مپ برای Google Search Console</h2>
+   <p style="color:var(--mut);margin:6px 0 12px">این دکمه فهرست همه‌ی بازی‌های منتشرشده را به‌صورت فایل <b>sitemap.xml</b> می‌سازد. فایل را دانلود کن، به‌جای sitemap.xml قبلی در GitHub آپلود کن و آدرسش را در Search Console بده. هر بار بازی جدید گذاشتی دوباره بساز.</p>
+   <button class="btn" id="mk">ساخت sitemap.xml</button>
+   <div id="smw" hidden><textarea class="code fld" id="smx" readonly style="width:100%;margin-top:12px"></textarea><button class="btn ghost sm" id="smd">⬇ دانلود sitemap.xml</button></div>
+  </div>
+ </section>
+</main>
+<div id="ftr"></div>
+<script src="app.js"></script>
+<script>
+(function(){
+ const G=window.GL,$=id=>document.getElementById(id);G.layout();
+ const TY=['apk','zip','html'],EXT={apk:['.apk'],zip:['.zip'],html:['.html','.htm'],img:['.png','.jpg','.jpeg','.webp']};
+ let games=[],E=null,F,rm,keep;
+ function reset(){E=null;F={cover:null,apk:null,zip:null,html:null,shots:[]};rm={cover:false,apk:false,zip:false,html:false};keep=[]}reset();
+ if(!G.LIVE){$('nocfg').hidden=false;return}
+ const view=v=>{['list','form','tools'].forEach(k=>$('v-'+k).hidden=k!==v);document.querySelectorAll('.tabs .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===v))};
+ async function start(){let ok=false;try{ok=await G.isAdmin()}catch(e){}$('login').hidden=ok;$('dash').hidden=!ok;if(ok)refresh()}
+ $('lf').onsubmit=async e=>{e.preventDefault();$('le').textContent='';$('lb').disabled=true;
+  try{await G.login($('em').value.trim(),$('pw').value);if(!await G.isAdmin()){G.logout();throw new Error('این حساب دسترسی مدیر ندارد')}$('pw').value='';start()}catch(x){$('le').textContent=x.message}$('lb').disabled=false};
+ $('out').onclick=()=>{G.logout();location.reload()};
+ document.querySelector('.tabs').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;if(c.dataset.v==='form'&&!E)openForm(null);view(c.dataset.v)};
+ async function refresh(){try{games=await G.adminGames();sessionStorage.removeItem('gl_games');stats();list()}catch(e){$('v-list').innerHTML='<div class="empty">خطا: '+G.esc(e.message)+'</div>'}}
+ function stats(){$('n1').textContent=G.nf(games.length);$('n2').textContent=G.nf(games.reduce((a,g)=>a+(+g.downloads||0),0));$('n3').textContent=G.nf(games.filter(g=>g.published).length)}
+ function list(){
+  $('v-list').innerHTML=games.length?games.map(g=>{const c=G.CATS[g.category]||G.CATS.other;return '<div class="gr glass" data-id="'+g.id+'"><img src="'+G.esc(g.cover_url||G.FALLBACK)+'" alt=""><div class="in"><b>'+G.esc(g.title)+'</b><small>'+c[1]+' '+c[0]+' • ⬇ '+G.nf(g.downloads)+' • '+TY.filter(t=>g[t+'_url']).map(t=>t.toUpperCase()).join(' ')+'</small><br><span class="tag'+(g.published?'':' d')+'">'+(g.published?'منتشر شده':'پیش‌نویس')+'</span>'+(g.featured?' <span class="tag">⭐ ویژه</span>':'')+'</div><div class="ac"><button class="btn sm ghost" data-a="edit">✏️</button><a class="btn sm ghost" target="_blank" href="game.html?g='+encodeURIComponent(g.slug)+'">👁</a><button class="btn sm ghost" data-a="feat">⭐</button><button class="btn sm ghost" data-a="pub">'+(g.published?'🙈':'📢')+'</button><button class="btn sm red" data-a="del">🗑</button></div></div>'}).join(''):'<div class="empty"><big>🕹</big><p>هنوز بازی‌ای اضافه نکرده‌ای. روی «➕ بازی جدید» بزن.</p></div>'}
+ $('v-list').onclick=async e=>{const b=e.target.closest('button[data-a]');if(!b)return;const g=games.find(x=>x.id===b.closest('.gr').dataset.id);if(!g)return;
+  try{if(b.dataset.a==='edit'){openForm(g);view('form')}
+   else if(b.dataset.a==='feat'){await G.saveGame(g.id,{featured:!g.featured});await refresh()}
+   else if(b.dataset.a==='pub'){await G.saveGame(g.id,{published:!g.published});await refresh()}
+   else if(b.dataset.a==='del'&&confirm('بازی «'+g.title+'» و همه‌ی فایل‌هایش برای همیشه حذف شود؟')){await G.deleteGame(g.id);await G.removeObjects('covers',[g.cover_url].concat(g.screenshots||[]).filter(Boolean));await G.removeObjects('gamefiles',TY.map(t=>g[t+'_url']).filter(Boolean));G.toast('حذف شد 🗑');await refresh()}}
+  catch(x){G.toast('خطا: '+x.message)}};
+ function openForm(g){reset();E=g;$('ft').textContent=g?'✏️ ویرایش «'+g.title+'»':'➕ افزودن بازی جدید';$('tabf').textContent=g?'✏️ ویرایش':'➕ بازی جدید';
+  $('f-title').value=g?g.title:'';$('f-slug').value=g?g.slug:'';$('f-slug').disabled=!!g;$('f-cat').value=g?g.category:'arcade';$('f-play').value=g&&g.play_url||'';$('f-short').value=g&&g.short_desc||'';$('f-desc').value=g&&g.description||'';
+  $('f-dl').value=g?g.downloads:0;$('f-pub').checked=g?g.published:true;$('f-feat').checked=g?g.featured:false;$('fe').textContent='';$('ups').innerHTML='';
+  ['cover','apk','zip','html','shots'].forEach(k=>$('f-'+k).value='');keep=g?(g.screenshots||[]).slice():[];cur()}
+ function cur(){
+  $('c-cover').innerHTML=E&&E.cover_url&&!rm.cover?'<img src="'+G.esc(E.cover_url)+'" height="46" style="border-radius:8px"> کاور فعلی <button class="btn sm red" data-r="cover" type="button">حذف</button>':'';
+  TY.forEach(t=>{$('c-'+t).innerHTML=E&&E[t+'_url']&&!rm[t]?'✅ فایل فعلی ('+G.fmtSize(E[t+'_size'])+') — فایل جدید جایگزینش می‌شود <button class="btn sm red" data-r="'+t+'" type="button">حذف</button>':''});
+  $('c-shots').innerHTML=keep.map((u,i)=>'<div class="it"><img src="'+G.esc(u)+'" alt=""><button type="button" data-s="'+i+'">✕</button></div>').join('')}
+ $('v-form').addEventListener('click',e=>{const r=e.target.closest('[data-r]'),s=e.target.closest('[data-s]');if(r){rm[r.dataset.r]=true;cur()}if(s){keep.splice(+s.dataset.s,1);cur()}});
+ const okExt=(f,l)=>l.some(x=>f.name.toLowerCase().endsWith(x));
+ ['cover','apk','zip','html'].forEach(k=>$('f-'+k).onchange=e=>{const f=e.target.files[0]||null;F[k]=f;$('fe').textContent=''});
+ $('f-shots').onchange=e=>{F.shots=[...e.target.files]};
+ $('f-title').oninput=()=>{if(!E&&!$('f-slug').dataset.m)$('f-slug').value=G.slugify($('f-title').value)};$('f-slug').oninput=()=>$('f-slug').dataset.m=1;
+ $('cn').onclick=()=>{reset();openForm(null);view('list')};
+ function up(name,bucket,file){const w=document.createElement('div');w.className='up glass';w.innerHTML=G.esc(name)+' — '+G.fmtSize(file.size)+'<div class="pg"><i></i></div>';$('ups').appendChild(w);const bar=w.querySelector('i');
+  return G.upload(bucket,(E?E.slug:$('f-slug').value.trim())+'/'+Date.now()+'-'+G.safeName(file.name),file,p=>bar.style.width=Math.round(p*100)+'%').then(u=>{bar.style.width='100%';w.style.borderColor='#22e3b0';return u},x=>{w.style.borderColor='#ff4d8d';throw x})}
+ $('sv').onclick=async()=>{
+  const err=m=>{$('fe').textContent=m;$('sv').disabled=false},title=$('f-title').value.trim();$('fe').textContent='';
+  if(!title)return err('نام بازی را بنویس');
+  let slug=E?E.slug:($('f-slug').value.trim()||G.slugify(title)||('game-'+Date.now().toString(36)));
+  if(!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug))return err('اسلاگ فقط می‌تواند حروف کوچک انگلیسی، عدد و خط تیره باشد');
+  const chk=[['cover',EXT.img,5],['apk',EXT.apk,50],['zip',EXT.zip,50],['html',EXT.html,50]];
+  for(const [k,l,mb] of chk){const f=F[k];if(f){if(!okExt(f,l))return err('پسوند فایل '+k.toUpperCase()+' درست نیست');if(f.size>mb*1048576)return err('حجم فایل '+k.toUpperCase()+' بیشتر از '+mb+' مگابایت است')}}
+  for(const f of F.shots){if(!okExt(f,EXT.img)||f.size>5*1048576)return err('تصاویر باید JPG/PNG/WEBP و کمتر از ۵ مگابایت باشند')}
+  const pu=$('f-play').value.trim();if(pu&&!/^https?:\/\//i.test(pu))return err('لینک بازی آنلاین باید با https:// شروع شود');
+  $('sv').disabled=true;$('ups').innerHTML='';
+  const patch={title:title,slug:slug,short_desc:$('f-short').value.trim()||null,description:$('f-desc').value.trim()||null,category:$('f-cat').value,play_url:pu||null,featured:$('f-feat').checked,published:$('f-pub').checked,downloads:Math.max(0,parseInt($('f-dl').value)||0)};
+  const old={covers:[],gamefiles:[]};
+  try{
+   if(F.cover){patch.cover_url=await up('کاور','covers',F.cover);if(E&&E.cover_url)old.covers.push(E.cover_url)}else if(rm.cover&&E){patch.cover_url=null;old.covers.push(E.cover_url)}
+   for(const t of TY){if(F[t]){patch[t+'_url']=await up(t.toUpperCase(),'gamefiles',F[t]);patch[t+'_size']=F[t].size;if(E&&E[t+'_url'])old.gamefiles.push(E[t+'_url'])}else if(rm[t]&&E){patch[t+'_url']=null;patch[t+'_size']=null;old.gamefiles.push(E[t+'_url'])}}
+   const nu=[];for(const f of F.shots)nu.push(await up('تصویر','covers',f));
+   if(E)(E.screenshots||[]).forEach(u=>{if(!keep.includes(u))old.covers.push(u)});
+   patch.screenshots=keep.concat(nu);
+   await G.saveGame(E?E.id:null,patch);
+   await G.removeObjects('covers',old.covers.filter(Boolean));await G.removeObjects('gamefiles',old.gamefiles.filter(Boolean));
+   G.toast(E?'تغییرات ذخیره شد ✅':'بازی منتشر شد 🎉');reset();openForm(null);$('sv').disabled=false;await refresh();view('list');
+  }catch(x){err(/duplicate|unique/i.test(x.message)?'این اسلاگ قبلاً برای بازی دیگری استفاده شده؛ یک اسلاگ دیگر بنویس':x.message)}};
+ $('mk').onclick=async()=>{try{const l=await G.adminGames();$('smx').value=G.sitemapXml(l);$('smw').hidden=false}catch(x){G.toast('خطا: '+x.message)}};
+ $('smd').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('smx').value],{type:'application/xml'}));a.download='sitemap.xml';a.click()};
+ start();
+})();
+</script>
+</body>
+</html>

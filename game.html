@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بازی | GameLand گیم‌لند</title>
+<meta name="description" content="دانلود بازی از گیم‌لند">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070816">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap" id="main"><div class="sk" style="margin-top:30px;height:380px"></div></main>
+<div id="ftr"></div>
+<script src="app.js"></script>
+<script>
+(function(){
+ const G=window.GL,$=id=>document.getElementById(id),slug=new URL(location.href).searchParams.get('g')||'';
+ G.layout();
+ const notFound=()=>{document.title='بازی پیدا نشد | GameLand';$('main').innerHTML='<div class="empty"><big>😕</big><h2>این بازی پیدا نشد</h2><p>ممکن است حذف شده یا آدرس اشتباه باشد.</p><p><a class="btn" style="margin-top:14px" href="index.html">بازگشت به خانه</a></p></div>'};
+ if(!slug)return notFound();
+ G.loadGame(slug).then(g=>{
+  if(!g)return notFound();
+  const cat=G.CATS[g.category]||G.CATS.other,files=G.fileList(g),url=G.siteUrl('game.html?g='+encodeURIComponent(g.slug)),desc=(g.short_desc||g.description||'').replace(/\s+/g,' ').slice(0,155);
+  const os=g.apk_url?'Android':(g.zip_url||g.html_url)?'Windows, Android, macOS, Linux (مرورگر)':'Web';
+  G.seo({title:g.title+' — دانلود رایگان | GameLand گیم‌لند',desc:desc||('دانلود بازی '+g.title),url:url,image:g.cover_url,type:'article',
+   ld:{'@context':'https://schema.org','@type':'VideoGame',name:g.title,description:desc,image:g.cover_url&&g.cover_url.indexOf('data:')!==0?g.cover_url:undefined,genre:cat[0],inLanguage:'fa',url:url,applicationCategory:'GameApplication',operatingSystem:os,datePublished:g.created_at,offers:{'@type':'Offer',price:'0',priceCurrency:'USD'}}});
+  const how={apk:'روی گوشی اندروید فایل را باز کن، اجازه‌ی نصب از این منبع را بده و <b>Install</b> را بزن. اگر Play Protect هشدار داد، <b>Install anyway</b> را بزن.',zip:'فایل را از حالت فشرده خارج کن (Extract) و فایل <b>index.html</b> داخلش را با مرورگر باز کن.',html:'فایل را دانلود کن و با یک مرورگر (Chrome، Edge، Safari…) باز کن؛ بدون نصب اجرا می‌شود.'};
+  const howKeys=files.filter(f=>how[f.type]);
+  $('main').innerHTML='<nav class="crumb"><a href="index.html">خانه</a> › <a href="index.html?cat='+g.category+'#games">'+cat[0]+'</a> › '+G.esc(g.title)+'</nav>'+
+  '<div class="gp"><div><div class="cover"><img src="'+G.esc(g.cover_url||G.FALLBACK)+'" alt="'+G.esc(g.title)+'" width="640" height="400"></div></div>'+
+  '<div><span class="tag">'+cat[1]+' '+cat[0]+'</span><h1>'+G.esc(g.title)+'</h1><p style="color:var(--mut)">'+G.esc(g.short_desc||'')+'</p>'+
+  '<div class="pills">'+(G.LIVE?'<span>⬇ <b id="dc">'+G.nf(g.downloads)+'</b> دانلود</span>':'<span>🆓 رایگان</span>')+(files[0]&&files[0].size?'<span>📦 '+G.fmtSize(files[0].size)+'</span>':'')+'<span>📅 '+G.fmtDate(g.created_at)+'</span></div>'+
+  '<div class="files">'+(files.length?files.map(f=>'<div class="file glass"><i>'+f.icon+'</i><div><b>'+f.name+'</b><small>'+(f.size?G.fmtSize(f.size):'رایگان')+'</small></div><a class="dl" data-id="'+G.esc(g.id)+'" href="'+G.esc(G.dlHref(g,f))+'" '+(f.type==='play'?'target="_blank" rel="noopener"':'download')+'>'+f.btn+'</a></div>').join(''):'<div class="file glass"><div><b>فایلی برای دانلود هنوز بارگذاری نشده</b></div></div>')+'</div>'+
+  '<div class="share"><button class="btn ghost sm" id="cp">🔗 کپی لینک</button><a class="btn ghost sm" target="_blank" rel="noopener" href="https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(g.title)+'">تلگرام</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(g.title+' '+url)+'">واتساپ</a></div></div></div>'+
+  (g.description?'<section class="desc glass"><h2>درباره‌ی بازی</h2>'+G.esc(g.description)+'</section>':'')+
+  ((g.screenshots||[]).length?'<section class="sec"><div class="sec-h"><h2>📸 تصاویر</h2></div><div class="shots">'+g.screenshots.map(s=>'<img loading="lazy" src="'+G.esc(s)+'" alt="تصویر بازی '+G.esc(g.title)+'">').join('')+'</div></section>':'')+
+  (howKeys.length?'<section class="how glass">'+howKeys.map(f=>'<p>'+f.icon+' <b>'+f.name.split(' (')[0]+':</b> '+how[f.type]+'</p>').join('')+'</section>':'')+
+  '<section class="sec" id="rel"></section>';
+  $('main').addEventListener('click',e=>{const a=e.target.closest('a.dl[data-id]');if(a&&a.getAttribute('href')!=='#demo'&&G.LIVE){const d=$('dc');if(d&&!a.dataset.c){a.dataset.c=1;d.textContent=G.nf((+g.downloads||0)+1)}}});
+  $('cp').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>G.toast('لینک کپی شد ✅')).catch(()=>G.toast(url))};
+  document.querySelectorAll('.shots img').forEach(im=>im.onclick=()=>{const l=document.createElement('div');l.className='lb';l.innerHTML='<img src="'+im.src+'" alt="">';l.onclick=()=>l.remove();document.body.appendChild(l)});
+  G.loadGames(list=>{const rel=list.filter(x=>x.slug!==g.slug&&x.category===g.category).slice(0,4);if(rel.length)$('rel').innerHTML='<div class="sec-h"><h2>🎯 بازی‌های مشابه</h2></div><div class="grid">'+rel.map(G.card).join('')+'</div>'}).catch(()=>{});
+ }).catch(()=>{$('main').innerHTML='<div class="empty"><big>⚠️</big><p>خطا در دریافت اطلاعات. اینترنت را بررسی کن.</p></div>'});
+})();
+</script>
+</body>
+</html>

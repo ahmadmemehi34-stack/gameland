@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مار</title>
+<style>
+:root{--bg1:#1b1340;--bg2:#0b0a1f;--card:rgba(255,255,255,.07);--text:#f3f0ff;--sub:#a79fd6;--b1:#1a1840;--b2:#14123a;--accent:#2de2a6;--accent2:#7b5cff;--heart:#ff4d79;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg1:#efeaff;--bg2:#d9e4ff;--card:rgba(255,255,255,.7);--text:#1d1747;--sub:#5d5792;--b1:#f7f5ff;--b2:#ebe7ff}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 50% 0%,var(--bg1),var(--bg2));color:var(--text);font-family:"Vazirmatn",Tahoma,sans-serif;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none}
+.app{width:min(94vw,380px)}
+.top{display:flex;gap:10px;margin-bottom:12px}
+.pill{flex:1;background:var(--card);border-radius:16px;padding:8px 14px;backdrop-filter:blur(8px)}
+.pill small{display:block;color:var(--sub);font-size:12px}
+.pill b{font-size:24px;font-variant-numeric:tabular-nums}
+.pill.h b{color:var(--heart)}
+.board{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 12px 40px rgba(123,92,255,.35),0 0 0 2px rgba(123,92,255,.5)}
+canvas{display:block;width:100%;aspect-ratio:1/1}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(10,8,30,.72);backdrop-filter:blur(4px);color:#fff;text-align:center}
+.ov.off{display:none}
+.ov h2{margin:0;font-size:28px}
+.ov p{margin:0;color:#cfc8ff;font-size:15px}
+.ov button{margin-top:8px;border:0;border-radius:999px;padding:12px 34px;font:700 17px inherit;font-family:inherit;color:#07261c;background:linear-gradient(135deg,var(--accent),#7af0ff);box-shadow:0 6px 18px rgba(45,226,166,.45)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;direction:ltr}
+.pad button{height:52px;border:0;border-radius:16px;background:var(--card);color:var(--text);font-size:20px;backdrop-filter:blur(8px)}
+.pad button:active{background:var(--accent2);color:#fff}
+.u{grid-column:2}.l{grid-column:1;grid-row:2}.d{grid-column:2;grid-row:2}.r{grid-column:3;grid-row:2}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="pill"><small>امتیاز</small><b id="sc">0</b></div>
+    <div class="pill h"><small>بهترین ❤</small><b id="hi">0</b></div>
+  </div>
+  <div class="board">
+    <canvas id="c" width="360" height="360"></canvas>
+    <div class="ov" id="ov"><h2 id="t">مار</h2><p id="m">سوایپ کن یا دکمه‌ها رو بزن. به دیوار نخور!</p><button id="go">شروع</button></div>
+  </div>
+  <div class="pad">
+    <button class="u" data-d="u" aria-label="بالا">▲</button>
+    <button class="l" data-d="l" aria-label="چپ">◀</button>
+    <button class="d" data-d="d" aria-label="پایین">▼</button>
+    <button class="r" data-d="r" aria-label="راست">▶</button>
+  </div>
+</div>
+<script>
+const N=15,S=24,cv=document.getElementById('c'),x=cv.getContext('2d');
+let snake,dir,next,food,score=0,hi=0,timer,state='idle',speed,dead=false;
+try{hi=+localStorage.getItem('snakeHi2')||0}catch(e){}
+const $=id=>document.getElementById(id);
+const V={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]};
+const light=()=>matchMedia('(prefers-color-scheme:light)').matches&&document.documentElement.dataset.theme!=='dark';
+function ui(){$('sc').textContent=score;$('hi').textContent=hi}
+function reset(){snake=[[7,7],[6,7],[5,7]];dir=next=V.r;score=0;speed=150;dead=false;place();ui()}
+function place(){do{food=[Math.random()*N|0,Math.random()*N|0]}while(snake.some(s=>s[0]==food[0]&&s[1]==food[1]))}
+function start(){reset();state='play';$('ov').classList.add('off');clearInterval(timer);timer=setInterval(step,speed)}
+function step(){
+  dir=next;
+  const h=[snake[0][0]+dir[0],snake[0][1]+dir[1]];
+  if(h[0]<0||h[1]<0||h[0]>=N||h[1]>=N||snake.some(s=>s[0]==h[0]&&s[1]==h[1]))return over();
+  snake.unshift(h);
+  if(h[0]==food[0]&&h[1]==food[1]){
+    score++;if(score>hi){hi=score;try{localStorage.setItem('snakeHi2',hi)}catch(e){}}
+    place();ui();
+    if(speed>70){speed-=3;clearInterval(timer);timer=setInterval(step,speed)}
+  }else snake.pop();
+}
+function over(){clearInterval(timer);state='over';dead=true;
+  $('t').textContent='باختی 💥';$('m').textContent='تعداد قلب‌ها: '+score;$('go').textContent='دوباره';$('ov').classList.remove('off')}
+function turn(k){
+  if(state!=='play')return;
+  const v=V[k];if(v[0]+dir[0]===0&&v[1]+dir[1]===0)return;next=v;
+}
+function heart(cx,cy,s){
+  x.beginPath();x.moveTo(cx,cy+s*.9);
+  x.bezierCurveTo(cx-s*1.5,cy-s*.1,cx-s*.8,cy-s*1.1,cx,cy-s*.4);
+  x.bezierCurveTo(cx+s*.8,cy-s*1.1,cx+s*1.5,cy-s*.1,cx,cy+s*.9);x.fill();
+}
+function rr(a,b,w,h,r){x.beginPath();x.roundRect(a,b,w,h,r);x.fill()}
+function draw(t){
+  const L=light();
+  for(let i=0;i<N;i++)for(let j=0;j<N;j++){
+    x.fillStyle=(i+j)%2?(L?'#f7f5ff':'#1a1840'):(L?'#ebe7ff':'#14123a');x.fillRect(i*S,j*S,S,S)}
+  // heart
+  const p=1+Math.sin(t/180)*.12,fx=food[0]*S+S/2,fy=food[1]*S+S/2;
+  x.shadowColor='#ff4d79';x.shadowBlur=18;x.fillStyle='#ff4d79';heart(fx,fy,S*.36*p);x.shadowBlur=0;
+  x.fillStyle='rgba(255,255,255,.7)';x.beginPath();x.arc(fx-S*.17,fy-S*.12,S*.06,0,7);x.fill();
+  // snake
+  const n=snake.length;
+  for(let i=n-1;i>=0;i--){
+    const s=snake[i],k=1-i/Math.max(n,6)*.55;
+    x.shadowColor='#2de2a6';x.shadowBlur=i?6:14;
+    x.fillStyle=`hsl(${160+(1-k)*110},80%,${48+k*8}%)`;
+    const g=i?2:1;rr(s[0]*S+g,s[1]*S+g,S-g*2,S-g*2,i?7:10);
+  }
+  x.shadowBlur=0;
+  const h=snake[0],ex=dir[0],ey=dir[1],px=-ey,py=ex,cx=h[0]*S+S/2,cy=h[1]*S+S/2;
+  [-1,1].forEach(sd=>{
+    const ax=cx+ex*4+px*sd*5,ay=cy+ey*4+py*sd*5;
+    x.fillStyle='#fff';x.beginPath();x.arc(ax,ay,3.4,0,7);x.fill();
+    x.fillStyle=dead?'#ff4d79':'#12102e';x.beginPath();x.arc(ax+ex*1,ay+ey*1,1.7,0,7);x.fill();
+  });
+  requestAnimationFrame(draw);
+}
+document.addEventListener('keydown',e=>{
+  const m={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r',w:'u',s:'d',a:'l',d:'r'}[e.key];
+  if(m){e.preventDefault();turn(m)}
+  else if((e.key==='Enter'||e.key===' ')&&state!=='play')start();
+});
+$('go').addEventListener('click',start);
+document.querySelectorAll('.pad button').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();turn(b.dataset.d)}));
+let t0=null;
+document.addEventListener('touchstart',e=>{t0=[e.touches[0].clientX,e.touches[0].clientY]},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!t0||e.target.closest('.pad')||e.target.closest('.ov'))return;
+  const dx=e.changedTouches[0].clientX-t0[0],dy=e.changedTouches[0].clientY-t0[1];
+  if(Math.max(Math.abs(dx),Math.abs(dy))>=24)turn(Math.abs(dx)>Math.abs(dy)?(dx>0?'r':'l'):(dy>0?'d':'u'));
+  t0=null;
+});
+reset();requestAnimationFrame(draw);
+</script>
+</body>
+</html>

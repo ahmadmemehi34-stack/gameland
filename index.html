@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GameLand | گیم‌لند — دانلود رایگان بازی‌های موبایل و کامپیوتر</title>
+<meta name="description" content="گیم‌لند: مجموعه‌ی بازی‌های ماشینی، تفنگی، فکری و آرکید. بازی‌ها را ببین، جست‌وجو کن و رایگان دانلود کن.">
+<meta name="robots" content="index,follow">
+<!-- برای Google Search Console: کد تأیید را اینجا بگذار (راهنما در README.md) -->
+<!-- <meta name="google-site-verification" content="CODE_HERE"> -->
+<meta property="og:site_name" content="GameLand | گیم‌لند">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070816">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap">
+ <section class="hero">
+  <h1>بازی‌های من، دانلود برای همه 🎮</h1>
+  <p>جدیدترین بازی‌های ماشینی، تفنگی، فکری و آرکید. ببین، جست‌وجو کن و رایگان دانلود کن.</p>
+  <label class="search"><span>🔍</span><input id="q" type="search" placeholder="اسم بازی را جست‌وجو کن..." autocomplete="off" aria-label="جست‌وجوی بازی"></label>
+  <div class="stats"><div class="stat glass"><b id="s1">۰</b><small>بازی</small></div><div class="stat glass"><b id="s2">۰</b><small>دانلود</small></div><div class="stat glass"><b id="s3">۴</b><small>دسته‌بندی</small></div></div>
+  <div id="demo"></div>
+ </section>
+
+ <div class="chips" id="chips" role="tablist" aria-label="دسته‌بندی بازی‌ها"></div>
+
+ <div id="home">
+  <section class="sec" id="featured" hidden><div class="sec-h"><h2>⭐ بازی‌های ویژه</h2></div><div class="row" id="rf"></div></section>
+  <section class="sec" id="popular"><div class="sec-h"><h2>🔥 محبوب‌ترین‌ها</h2></div><div class="grid" id="rp"></div></section>
+  <section class="sec" id="new"><div class="sec-h"><h2>🆕 جدیدترین‌ها</h2></div><div class="grid" id="rn"></div></section>
+ </div>
+
+ <section class="sec" id="games"><div class="sec-h"><h2 id="gt">🕹 همه‌ی بازی‌ها</h2><select id="sort" aria-label="مرتب‌سازی"><option value="new">جدیدترین</option><option value="pop">محبوب‌ترین</option><option value="name">نام (الف‌ب)</option></select></div>
+  <div class="grid" id="all"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+  <div class="empty" id="empty" hidden><big>🕹</big><p id="et">بازی‌ای پیدا نشد.</p></div>
+ </section>
+ <noscript><p class="empty">برای دیدن بازی‌ها جاوااسکریپت مرورگرت را روشن کن.</p></noscript>
+</main>
+<div id="ftr"></div>
+<script src="app.js"></script>
+<script>
+(function(){
+ const $=id=>document.getElementById(id),G=window.GL;let all=[],cat='all',q='';
+ G.layout();
+ const url=new URL(location.href);if(url.searchParams.get('cat')&&G.CATS[url.searchParams.get('cat')])cat=url.searchParams.get('cat');q=url.searchParams.get('q')||'';$('q').value=q; 
+ G.seo({title:'GameLand | گیم‌لند — دانلود رایگان بازی‌های موبایل و کامپیوتر',desc:'گیم‌لند: مجموعه‌ی بازی‌های ماشینی، تفنگی، فکری و آرکید. بازی‌ها را ببین، جست‌وجو کن و رایگان دانلود کن.',url:G.siteUrl(''),
+  ld:{'@context':'https://schema.org','@type':'WebSite',name:'GameLand | گیم‌لند',url:G.siteUrl(''),inLanguage:'fa',potentialAction:{'@type':'SearchAction',target:G.siteUrl('?q={search_term_string}'),'query-input':'required name=search_term_string'}}});
+ function chips(){const n={all:all.length};all.forEach(g=>n[g.category]=(n[g.category]||0)+1);
+  $('chips').innerHTML='<button class="chip'+(cat==='all'?' on':'')+'" data-c="all">🎮 همه ('+G.nf(all.length)+')</button>'+Object.keys(G.CATS).filter(k=>n[k]).map(k=>'<button class="chip'+(cat===k?' on':'')+'" data-c="'+k+'">'+G.CATS[k][1]+' '+G.CATS[k][0]+' ('+G.nf(n[k])+')</button>').join('')}
+ function view(){
+  const filtering=cat!=='all'||q.trim();let list=all.filter(g=>(cat==='all'||g.category===cat)&&(!q.trim()||(g.title+' '+(g.short_desc||'')+' '+(g.description||'')).toLowerCase().includes(q.trim().toLowerCase())));
+  const s=$('sort').value;list.sort((a,b)=>s==='pop'?b.downloads-a.downloads:s==='name'?a.title.localeCompare(b.title,'fa'):new Date(b.created_at)-new Date(a.created_at));
+  $('home').hidden=!!filtering||!all.length;$('popular').hidden=!G.LIVE;
+  $('gt').textContent=filtering?'🔎 نتیجه‌ها ('+G.nf(list.length)+')':'🕹 همه‌ی بازی‌ها';
+  $('all').innerHTML=list.map(G.card).join('');$('empty').hidden=list.length>0;
+  $('et').textContent=all.length?'بازی‌ای با این جست‌وجو پیدا نشد.':'هنوز بازی‌ای منتشر نشده. به‌زودی بازی‌های جدید می‌آیند!';
+  if(!filtering&&all.length){const f=all.filter(g=>g.featured);$('featured').hidden=!f.length;$('rf').innerHTML=f.map(G.card).join('');
+   $('popular').hidden=!G.LIVE;$('rp').innerHTML=[...all].sort((a,b)=>b.downloads-a.downloads).slice(0,4).map(G.card).join('');$('rn').innerHTML=all.slice(0,4).map(G.card).join('')}
+ }
+ function stats(){$('s2').parentNode.hidden=!G.LIVE;$('s3').textContent=G.nf(new Set(all.map(g=>g.category)).size);$('popular').hidden=!G.LIVE;$('s1').textContent=G.nf(all.length);$('s2').textContent=G.nf(all.reduce((a,g)=>a+(+g.downloads||0),0))}
+ $('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;chips();view();if(cat!=='all')$('games').scrollIntoView({behavior:'smooth'})});
+ let t;$('q').addEventListener('input',e=>{clearTimeout(t);t=setTimeout(()=>{q=e.target.value;view()},180)});$('sort').addEventListener('change',view);
+ G.loadGames((list)=>{all=list;stats();chips();view()}).catch(err=>{$('all').innerHTML='';$('empty').hidden=false;$('et').textContent='خطا در دریافت بازی‌ها. اینترنت را بررسی کن و دوباره امتحان کن.'});
+})();
+</script>
+</body>
+</html>
