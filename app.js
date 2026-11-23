@@ -86,7 +86,7 @@ function card(g) {
 /* ---------- ظاهر مشترک ---------- */
 function layout() {
   const h = document.getElementById('hdr'), f = document.getElementById('ftr');
-  if (h) h.outerHTML = '<header class="hd"><div class="wrap"><a class="logo" href="index.html" aria-label="GameLand"><b>G</b><span>GameLand</span><small>گیم‌لند</small></a><nav><a href="index.html">خانه</a><a href="index.html#popular">محبوب‌ها</a><a href="index.html#new">جدیدترین‌ها</a><a href="index.html#games">همه‌ی بازی‌ها</a></nav><a class="hbtn" href="index.html#games">شروع بازی <span>←</span></a></div></header>';
+  if (h) h.outerHTML = '<header class="hd"><div class="wrap"><a class="logo" href="index.html" aria-label="GameLand"><b>G</b><span>GameLand</span><small>گیم‌لند</small></a><nav><a href="index.html">خانه</a><a href="index.html#games">بازی‌ها</a><a href="index.html#chips">دسته‌بندی‌ها</a><a href="index.html#games">همه‌ی بازی‌ها</a></nav><a class="hbtn" href="index.html#games">شروع بازی <span>←</span></a></div></header>';
   if (f) f.outerHTML = '<footer class="ft"><div class="wrap"><div><b>GameLand | گیم‌لند</b><br>بازی‌های ساخته‌شده با ❤️ و قابل دانلود برای همه' + (C.CONTACT ? '<br>ارتباط: <a href="' + esc(/^https?:|^mailto:/.test(C.CONTACT) ? C.CONTACT : (C.CONTACT.indexOf('@') > 0 ? 'mailto:' + C.CONTACT : 'https://t.me/' + C.CONTACT.replace('@', ''))) + '">' + esc(C.CONTACT) + '</a>' : '') + '</div><div class="lk">' + Object.keys(CATS).map(k => '<a href="index.html?cat=' + k + '#games">' + CATS[k][1] + ' ' + CATS[k][0] + '</a>').join('') + '</div></div></footer>';
 }
 function toast(t) { const e = document.createElement('div'); e.className = 'toast'; e.textContent = t; document.body.appendChild(e); setTimeout(() => e.remove(), 2800); }
@@ -145,4 +145,5 @@ async function removeObjects(bucket, urls) {
 
 window.GL = { C, LIVE, BASE, CATS, FALLBACK, esc, nf, fmtSize, fmtDate, slugify, safeName, rest, pubUrl, pathFromUrl, loadGames, loadGame, fileList, primary, dlHref, countDownload, card, layout, toast, siteUrl, seo, sitemapXml, login, token, logout, isAdmin, adminGames, saveGame, deleteGame, upload, removeObjects, FT };
 })();
+
 

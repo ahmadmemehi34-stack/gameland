@@ -163,3 +163,14 @@ html{scroll-padding-top:90px}body{background:#09090d;color:var(--tx);line-height
 @media(max-width:520px){.wrap{width:calc(100% - 30px)}.hd .wrap{height:62px}.hd nav{display:none}.logo small{display:inline}.hero2{padding-top:29px}.hero2 h1{font-size:43px}.fc{border-radius:19px}.fcv{aspect-ratio:1.4}.fcb{padding:13px 15px 16px}.float-one{top:28px;right:-7px}.float-two{bottom:66px;left:-7px}.floatcard{padding:8px 10px}.floatcard span:not(.online-dot){display:none}.hero2 .stats{gap:7px}.stat{min-width:0;flex:1;padding:8px 9px}.stat b{font-size:17px}.stat small{font-size:10px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.cb{padding:10px}.cb h3{font-size:14px}.cb p{display:none}.dl{padding:8px 6px;font-size:11px}.meta{font-size:10px}.sec-h h2{font-size:18px}.chips{margin-left:-15px;margin-right:-15px;padding-left:15px;padding-right:15px}.fgrid{grid-template-columns:1fr}}
 @media(max-width:360px){.grid{grid-template-columns:1fr}.hero2 h1{font-size:39px}}
 @media(prefers-reduced-motion:reduce){body::before,.fc{animation:none!important}}
+
+/* Compact home: show the game catalog as one horizontal shelf */
+#home{display:none!important}
+#games{margin-top:4px;margin-bottom:8px}
+#games .sec-h{margin-bottom:10px}
+#games .grid{display:flex;flex-flow:row nowrap;gap:14px;overflow-x:auto;overflow-y:hidden;padding:2px 2px 14px;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#c7ff55 #19191f}
+#games .grid::-webkit-scrollbar{height:7px}
+#games .grid::-webkit-scrollbar-track{background:#19191f;border-radius:8px}
+#games .grid::-webkit-scrollbar-thumb{background:#c7ff55;border-radius:8px}
+#games .card{flex:0 0 clamp(225px,24vw,285px);scroll-snap-align:start}
+@media(max-width:600px){#games .grid{gap:11px}#games .card{flex-basis:72vw}}
