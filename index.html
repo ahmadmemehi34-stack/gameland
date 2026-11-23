@@ -10,7 +10,7 @@
 <!-- <meta name="google-site-verification" content="CODE_HERE"> -->
 <meta property="og:site_name" content="GameLand | گیم‌لند">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#070816">
+<meta name="theme-color" content="#09090d">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -19,13 +19,22 @@
 <body>
 <div id="hdr"></div>
 <main class="wrap">
- <section class="hero">
-  <h1>بازی‌های من، دانلود برای همه 🎮</h1>
-  <p>جدیدترین بازی‌های ماشینی، تفنگی، فکری و آرکید. ببین، جست‌وجو کن و رایگان دانلود کن.</p>
-  <label class="search"><span>🔍</span><input id="q" type="search" placeholder="اسم بازی را جست‌وجو کن..." autocomplete="off" aria-label="جست‌وجوی بازی"></label>
-  <div class="stats"><div class="stat glass"><b id="s1">۰</b><small>بازی</small></div><div class="stat glass"><b id="s2">۰</b><small>دانلود</small></div><div class="stat glass"><b id="s3">۴</b><small>دسته‌بندی</small></div></div>
-  <div id="demo"></div>
- </section>
+ <section class="hero hero2">
+  <div class="hero-copy">
+   <span class="tagp"><span class="spark">✦</span> بازی خوب، حال خوب</span>
+   <h1>دنیای بازی،<br><em>بی‌مرز.</em></h1>
+   <p>بازی موردعلاقه‌ات را پیدا کن، آنلاین بازی کن یا رایگان دانلودش کن. ماجراجویی بعدی‌ات همین‌جاست.</p>
+   <label class="search"><span>⌕</span><input id="q" type="search" placeholder="اسم بازی را جست‌وجو کن..." autocomplete="off" aria-label="جست‌وجوی بازی"><kbd>/</kbd></label>
+   <div class="hb"><a class="btn big" href="#games">کشف بازی‌ها <span>←</span></a><a class="btn ghost big" href="#new">تازه‌ترین‌ها</a></div>
+   <div class="stats"><div class="stat glass"><b id="s1">۰</b><small>بازی برای کشف</small></div><div class="stat glass"><b id="s2">۰</b><small>دانلود</small></div><div class="stat glass"><b id="s3">۴</b><small>دسته‌بندی</small></div></div>
+   <div id="demo"></div>
+  </div>
+  <div class="hv" aria-label="پیشنهاد بازی‌های گیم‌لند">
+   <div class="fc"><a class="fcv" href="mega-games.html"><img src="cover-mega.jpg" alt="مجموعه بازی‌های مگا گیمز"><span class="feature-pill">✦ انتخاب گیم‌لند</span></a><div class="fcb"><div class="feature-kicker"><span class="online-dot"></span> برای ماجراجویی آماده‌ای؟</div><h3>یک دنیا بازی، یک انتخاب با تو</h3><p>بازی‌های تازه و محبوب را همین‌جا پیدا کن.</p><div class="fa"><a href="mega-games.html" class="btn">دیدن بازی‌ها <span>←</span></a><span class="micro-note">رایگان · بدون دردسر</span></div></div></div>
+   <div class="floatcard float-one"><b><span class="online-dot"></span>بازی رایگان</b><span>شروع ماجراجویی با یک کلیک</span></div>
+   <div class="floatcard float-two"><b>✦ بازی‌های تازه</b><span>همیشه چیزی برای کشف هست</span></div>
+  </div>
+</section>
 
  <div class="chips" id="chips" role="tablist" aria-label="دسته‌بندی بازی‌ها"></div>
 
@@ -70,3 +79,4 @@
 </script>
 </body>
 </html>
+
